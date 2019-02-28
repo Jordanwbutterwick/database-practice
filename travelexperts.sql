@@ -1,13 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.5.2
+-- version 4.8.5
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 09, 2017 at 12:39 AM
--- Server version: 10.1.21-MariaDB
--- PHP Version: 5.6.30
+-- Generation Time: Mar 01, 2019 at 12:23 AM
+-- Server version: 10.1.38-MariaDB
+-- PHP Version: 7.3.2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -19,8 +21,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `travelexperts`
 --
-CREATE DATABASE IF NOT EXISTS `travelexperts` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `travelexperts`;
 
 -- --------------------------------------------------------
 
@@ -33,10 +33,6 @@ CREATE TABLE `affiliations` (
   `AffName` varchar(50) DEFAULT NULL,
   `AffDesc` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- RELATIONS FOR TABLE `affiliations`:
---
 
 --
 -- Dumping data for table `affiliations`
@@ -59,6 +55,7 @@ INSERT INTO `affiliations` (`AffilitationId`, `AffName`, `AffDesc`) VALUES
 
 CREATE TABLE `agencies` (
   `AgencyId` int(11) NOT NULL,
+  `AgencyName` varchar(50) NOT NULL,
   `AgncyAddress` varchar(50) DEFAULT NULL,
   `AgncyCity` varchar(50) DEFAULT NULL,
   `AgncyProv` varchar(50) DEFAULT NULL,
@@ -69,16 +66,13 @@ CREATE TABLE `agencies` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- RELATIONS FOR TABLE `agencies`:
---
-
---
 -- Dumping data for table `agencies`
 --
 
-INSERT INTO `agencies` (`AgencyId`, `AgncyAddress`, `AgncyCity`, `AgncyProv`, `AgncyPostal`, `AgncyCountry`, `AgncyPhone`, `AgncyFax`) VALUES
-(1, '1155 8th Ave SW', 'Calgary', 'AB', 'T2P1N3', 'Canada', '4032719873', '4032719872'),
-(2, '110 Main Street', 'Okotoks', 'AB', 'T7R3J5', 'Canada', '4035632381', '4035632382');
+INSERT INTO `agencies` (`AgencyId`, `AgencyName`, `AgncyAddress`, `AgncyCity`, `AgncyProv`, `AgncyPostal`, `AgncyCountry`, `AgncyPhone`, `AgncyFax`) VALUES
+(1, 'Jake Sloner', '1155 8th Ave SW', 'Calgary', 'AB', 'T2P1N3', 'Canada', '4032719873', '4032719872'),
+(2, 'Malkeet Kaur Agencies', '110 Main Street', 'Okotoks', 'AB', 'T7R3J5', 'Canada', '4035632381', '4035632382'),
+(3, 'Jordan Butterwick', '110 Main Street', 'Okotoks', 'Alberta', 'T7R3J5', 'Canada', '4035632381', '4035632382');
 
 -- --------------------------------------------------------
 
@@ -96,12 +90,6 @@ CREATE TABLE `agents` (
   `AgtPosition` varchar(20) DEFAULT NULL,
   `AgencyId` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
-
---
--- RELATIONS FOR TABLE `agents`:
---   `AgencyId`
---       `agencies` -> `AgencyId`
---
 
 --
 -- Dumping data for table `agents`
@@ -139,18 +127,6 @@ CREATE TABLE `bookingdetails` (
   `FeeId` varchar(10) DEFAULT NULL,
   `ProductSupplierId` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- RELATIONS FOR TABLE `bookingdetails`:
---   `BookingId`
---       `bookings` -> `BookingId`
---   `RegionId`
---       `regions` -> `RegionId`
---   `ClassId`
---       `classes` -> `ClassId`
---   `FeeId`
---       `fees` -> `FeeId`
---
 
 --
 -- Dumping data for table `bookingdetails`
@@ -319,16 +295,6 @@ CREATE TABLE `bookings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- RELATIONS FOR TABLE `bookings`:
---   `CustomerId`
---       `customers` -> `CustomerId`
---   `PackageId`
---       `packages` -> `PackageId`
---   `TripTypeId`
---       `triptypes` -> `TripTypeId`
---
-
---
 -- Dumping data for table `bookings`
 --
 
@@ -482,10 +448,6 @@ CREATE TABLE `classes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- RELATIONS FOR TABLE `classes`:
---
-
---
 -- Dumping data for table `classes`
 --
 
@@ -513,12 +475,6 @@ CREATE TABLE `creditcards` (
   `CCExpiry` datetime NOT NULL,
   `CustomerId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- RELATIONS FOR TABLE `creditcards`:
---   `CustomerId`
---       `customers` -> `CustomerId`
---
 
 --
 -- Dumping data for table `creditcards`
@@ -571,12 +527,6 @@ CREATE TABLE `customers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- RELATIONS FOR TABLE `customers`:
---   `AgentId`
---       `agents` -> `AgentId`
---
-
---
 -- Dumping data for table `customers`
 --
 
@@ -621,14 +571,6 @@ CREATE TABLE `customers_rewards` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- RELATIONS FOR TABLE `customers_rewards`:
---   `CustomerId`
---       `customers` -> `CustomerId`
---   `RewardId`
---       `rewards` -> `RewardId`
---
-
---
 -- Dumping data for table `customers_rewards`
 --
 
@@ -668,10 +610,6 @@ CREATE TABLE `fees` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- RELATIONS FOR TABLE `fees`:
---
-
---
 -- Dumping data for table `fees`
 --
 
@@ -701,10 +639,6 @@ CREATE TABLE `packages` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- RELATIONS FOR TABLE `packages`:
---
-
---
 -- Dumping data for table `packages`
 --
 
@@ -724,14 +658,6 @@ CREATE TABLE `packages_products_suppliers` (
   `PackageId` int(11) NOT NULL,
   `ProductSupplierId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- RELATIONS FOR TABLE `packages_products_suppliers`:
---   `ProductSupplierId`
---       `products_suppliers` -> `ProductSupplierId`
---   `PackageId`
---       `packages` -> `PackageId`
---
 
 --
 -- Dumping data for table `packages_products_suppliers`
@@ -760,10 +686,6 @@ CREATE TABLE `products` (
   `ProductId` int(11) NOT NULL,
   `ProdName` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- RELATIONS FOR TABLE `products`:
---
 
 --
 -- Dumping data for table `products`
@@ -795,14 +717,6 @@ CREATE TABLE `products_suppliers` (
   `ProductId` int(11) DEFAULT NULL,
   `SupplierId` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- RELATIONS FOR TABLE `products_suppliers`:
---   `ProductId`
---       `products` -> `ProductId`
---   `SupplierId`
---       `suppliers` -> `SupplierId`
---
 
 --
 -- Dumping data for table `products_suppliers`
@@ -900,10 +814,6 @@ CREATE TABLE `regions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- RELATIONS FOR TABLE `regions`:
---
-
---
 -- Dumping data for table `regions`
 --
 
@@ -930,10 +840,6 @@ CREATE TABLE `rewards` (
   `RwdName` varchar(50) DEFAULT NULL,
   `RwdDesc` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- RELATIONS FOR TABLE `rewards`:
---
 
 --
 -- Dumping data for table `rewards`
@@ -969,14 +875,6 @@ CREATE TABLE `suppliercontacts` (
   `AffiliationId` varchar(10) DEFAULT NULL,
   `SupplierId` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- RELATIONS FOR TABLE `suppliercontacts`:
---   `SupplierId`
---       `suppliers` -> `SupplierId`
---   `AffiliationId`
---       `affiliations` -> `AffilitationId`
---
 
 --
 -- Dumping data for table `suppliercontacts`
@@ -1338,10 +1236,6 @@ CREATE TABLE `suppliers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- RELATIONS FOR TABLE `suppliers`:
---
-
---
 -- Dumping data for table `suppliers`
 --
 
@@ -1431,10 +1325,6 @@ CREATE TABLE `triptypes` (
   `TripTypeId` varchar(1) NOT NULL,
   `TTName` varchar(25) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- RELATIONS FOR TABLE `triptypes`:
---
 
 --
 -- Dumping data for table `triptypes`
@@ -1602,47 +1492,56 @@ ALTER TABLE `triptypes`
 -- AUTO_INCREMENT for table `agencies`
 --
 ALTER TABLE `agencies`
-  MODIFY `AgencyId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `AgencyId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
+
 --
 -- AUTO_INCREMENT for table `agents`
 --
 ALTER TABLE `agents`
   MODIFY `AgentId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
 --
 -- AUTO_INCREMENT for table `bookingdetails`
 --
 ALTER TABLE `bookingdetails`
   MODIFY `BookingDetailId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1304;
+
 --
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
   MODIFY `BookingId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1304;
+
 --
 -- AUTO_INCREMENT for table `creditcards`
 --
 ALTER TABLE `creditcards`
   MODIFY `CreditCardId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=280;
+
 --
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
   MODIFY `CustomerId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=145;
+
 --
 -- AUTO_INCREMENT for table `packages`
 --
 ALTER TABLE `packages`
   MODIFY `PackageId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
   MODIFY `ProductId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
 --
 -- AUTO_INCREMENT for table `products_suppliers`
 --
 ALTER TABLE `products_suppliers`
   MODIFY `ProductSupplierId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
+
 --
 -- Constraints for dumped tables
 --
@@ -1709,6 +1608,7 @@ ALTER TABLE `products_suppliers`
 ALTER TABLE `suppliercontacts`
   ADD CONSTRAINT `suppliercontacts_ibfk_1` FOREIGN KEY (`SupplierId`) REFERENCES `suppliers` (`SupplierId`),
   ADD CONSTRAINT `suppliercontacts_ibfk_2` FOREIGN KEY (`AffiliationId`) REFERENCES `affiliations` (`AffilitationId`);
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
